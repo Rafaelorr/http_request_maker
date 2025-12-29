@@ -1,38 +1,54 @@
 import requests
 import json
 import re
+import os
 
-def is_valid(json_string):
-    print("JSON String:", json_string)
+def is_valid_json_string(json_string):
+    """Controleer of een string geldig JSON is."""
     try:
         json.loads(json_string)
-        print("  Is valid?: True")
+        return True
     except ValueError:
-        print("  Is valid?: False")
-        return None
+        return False
 
-# api-endpoint
-while True:
-    url = input("Typ het API endpoint URL: ")
-    pattern = r'https?://\S+|www\.\S+'
-    if re.findall(pattern,url):
-        break
-    print("Ongeldige URL. Zorg ervoor dat de URL begint met http:// of https://")
-    url = input("Typ het API endpoint URL: ")
+def get_valid_url():
+    """Vraag de gebruiker herhaaldelijk om een geldige URL."""
+    pattern = r'^https?://\S+'
+    while True:
+        url = input("Typ het API endpoint URL: ").strip()
+        if re.match(pattern, url):
+            return url
+        print("Ongeldige URL. Zorg ervoor dat de URL begint met http:// of https://")
 
-while True:
-    param_file = input("Typ de bestandsnaam van de parameters (bijv. params.json): ")
-    if param_file.strip() and is_valid(param_file):
-        break
-    print("Type een geldig json bestandsnaam.")
+def get_valid_param_file():
+    """Vraag de gebruiker herhaaldelijk om een geldig JSON-bestand met parameters."""
+    while True:
+        param_file = input("Typ de bestandsnaam van de parameters (bijv. params.json): ").strip()
+        if not param_file:
+            print("Voer een bestandsnaam in.")
+            continue
+        if not os.path.isfile(param_file):
+            print(f"Bestand '{param_file}' bestaat niet. Probeer het opnieuw.")
+            continue
+        try:
+            with open(param_file, 'r') as f:
+                params = json.load(f)
+            return params
+        except json.JSONDecodeError:
+            print("Het bestand bevat geen geldig JSON. Probeer een ander bestand.")
+        except Exception as e:
+            print(f"Fout bij het lezen van het bestand: {e}")
 
-with open(param_file, "r") as f:
-    params = json.load(f)
+if __name__ == "__main__":
+    url = get_valid_url()
+    params = get_valid_param_file()
 
-# sending get request and saving the response as response object
-r = requests.get(url = url, params = params)
-
-# extracting data in json format
-data = r.json()
-
-print(data)
+    try:
+        response = requests.get(url, params=params)
+        response.raise_for_status()  # Check voor HTTP fouten
+        data = response.json()
+        print(json.dumps(data, indent=4, ensure_ascii=False))
+    except requests.exceptions.RequestException as e:
+        print(f"Fout bij het maken van de API-aanroep: {e}")
+    except json.JSONDecodeError:
+        print("De response van de API is geen geldige JSON.")
