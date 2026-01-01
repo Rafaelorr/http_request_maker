@@ -47,7 +47,9 @@ if __name__ == "__main__":
         response = requests.get(url, params=params)
         response.raise_for_status()  # Check voor HTTP fouten
         data = response.json()
-        print(json.dumps(data, indent=4, ensure_ascii=False))
+        json_str = json.dumps(data, indent=4)
+        with open("response.json", "w") as f:
+            f.write(json_str)
     except requests.exceptions.RequestException as e:
         print(f"Fout bij het maken van de API-aanroep: {e}")
     except json.JSONDecodeError:
