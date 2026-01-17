@@ -42,10 +42,16 @@ def get_valid_param_file() -> dict:
 if __name__ == "__main__":
     url :str = get_valid_url()
     params :dict = get_valid_param_file()
+
+    timeout = params.pop("timeout", 5.0)
+    allow_redirects = params.pop("allow-redirects",True)
+    headers = params.pop("headers",{})
+
+
     data :dict = {}
 
     try:
-        response = requests.get(url, params=params, timeout=5.0)
+        response = requests.get(url, timeout=timeout, allow_redirects=allow_redirects,headers=headers, params=params)
         response.raise_for_status()
 
         # Headers opslaan
