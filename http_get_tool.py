@@ -3,7 +3,7 @@ import json
 import re
 import os
 
-def is_valid_json_string(json_string):
+def is_valid_json_string(json_string) -> bool:
     """Controleer of een string geldig JSON is."""
     try:
         json.loads(json_string)
@@ -11,19 +11,19 @@ def is_valid_json_string(json_string):
     except ValueError:
         return False
 
-def get_valid_url():
+def get_valid_url() -> str:
     """Vraag de gebruiker herhaaldelijk om een geldige URL."""
     pattern = r'^https?://\S+'
     while True:
-        url = input("Typ het API endpoint URL: ").strip()
+        url :str = input("Typ het API endpoint URL: ").strip()
         if re.match(pattern, url):
             return url
         print("Ongeldige URL. Zorg ervoor dat de URL begint met http:// of https://")
 
-def get_valid_param_file():
+def get_valid_param_file() -> dict:
     """Vraag de gebruiker herhaaldelijk om een geldig JSON-bestand met parameters."""
     while True:
-        param_file = input("Typ de bestandsnaam van de parameters (bijv. params.json): ").strip()
+        param_file :str = input("Typ de bestandsnaam van de parameters (bijv. params.json): ").strip()
         if not param_file:
             print("Voer een bestandsnaam in.")
             continue
@@ -32,7 +32,7 @@ def get_valid_param_file():
             continue
         try:
             with open(param_file, 'r') as f:
-                params = json.load(f)
+                params :dict = json.load(f)
             return params
         except json.JSONDecodeError:
             print("Het bestand bevat geen geldig JSON. Probeer een ander bestand.")
@@ -40,9 +40,9 @@ def get_valid_param_file():
             print(f"Fout bij het lezen van het bestand: {e}")
 
 if __name__ == "__main__":
-    url = get_valid_url()
-    params = get_valid_param_file()
-    data = {}
+    url :str = get_valid_url()
+    params :dict = get_valid_param_file()
+    data :dict = {}
 
     try:
         response = requests.get(url, params=params, timeout=5.0)
