@@ -17,5 +17,14 @@ def main_get():
         return 404
     return jsonify(data)
 
+@app.route("/api/get/params/<number>", methods=["GET"])
+def get_params(number):
+    try:
+        number = int(number)
+    except ValueError:
+        return 400
+
+    return jsonify({"number": number**number})
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
