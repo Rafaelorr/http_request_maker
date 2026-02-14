@@ -11,13 +11,13 @@ except FileNotFoundError:
 
 app = Flask(__name__)
 
-@app.route('/api/get', methods=['GET'])
+@app.route('/get/', methods=['GET'])
 def main_get():
     if not data:
         return 404
     return jsonify(data)
 
-@app.route("/api/get/params/<number>", methods=["GET"])
+@app.route("/get/<number>", methods=["GET"])
 def get_params(number):
     try:
         number = int(number)
