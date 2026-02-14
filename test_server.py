@@ -1,13 +1,19 @@
 from flask import Flask, jsonify, request
 import json
 
+# laad server config
 try:
     with open('get_server_config.json', 'r') as file:
         data = json.load(file)
-    print("File data =", data)
     
 except FileNotFoundError:
     print("Error: Het bestand 'get_server_config.json' bestaat niet.")
+    print("Standaard config gaat gebruikt worden.")
+
+    config = {
+    "message": "Dit is een test API endpoint",
+    "data": {"id": 1, "naam": "Test data"}
+}
 
 app = Flask(__name__)
 
