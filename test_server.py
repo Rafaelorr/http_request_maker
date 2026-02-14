@@ -28,18 +28,7 @@ def get_params(number):
 
 @app.route("/get/headers", methods=["GET"])
 def get_read_request_headers():
-    request_headers = {}
-    request_headers["user-agent"] = request.headers.get("user-agent")
-    request_headers["host"] = request.headers.get("host")
-    request_headers["accept-encoding"] = request.headers.getlist("accept-encoding")
-    request_headers["accept"] = request.headers.get("accept")
-    request_headers["connection"] = request.headers.get("connection")
-    request_headers["accept-language"] = request.headers.getlist("Accept-Language")
-    request_headers["referer"] = request.headers.get("Referer")
-    request_headers["connection"] = request.headers.get("Connection")
-    request_headers["if-modified-since"] = request.headers.get("If-Modified-Since")
-    request_headers["If-None-Match"] = request.headers.get("If-None-Match")
-    request_headers["cache-control"] = request.headers.get("Cache-Control")
+    request_headers = dict(request.headers)
 
     return jsonify(request_headers), 200
 
