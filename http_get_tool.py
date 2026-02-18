@@ -23,12 +23,9 @@ def get_valid_url() -> str:
 def get_valid_param_file() -> dict:
     """Vraag de gebruiker herhaaldelijk om een geldig JSON-bestand met parameters."""
     while True:
-        param_file :str = input("Typ de bestandsnaam van de parameters (bijv. params.json): ").strip()
-        if not param_file:
-            print("Voer een bestandsnaam in.")
-            continue
+        param_file :str = "get_config.json"
         if not os.path.isfile(param_file):
-            print(f"Bestand '{param_file}' bestaat niet. Probeer het opnieuw.")
+            print(f"Bestand '{param_file}' bestaat niet. ")
             continue
         try:
             with open(param_file, 'r') as f:
