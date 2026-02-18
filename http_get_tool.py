@@ -2,6 +2,28 @@ import requests
 import json
 import re
 import os
+import argparse
+
+parser = argparse.ArgumentParser(
+                    prog='resp-analyse',
+                    description='Dit programma analyseert het HTTP response van een server. Het moet eerst een custom HTTP request maken naar die server.',
+                    add_help=True,
+                    suggest_on_error=True,
+                    exit_on_error=False)
+
+parser.add_argument("-u", "--url")
+parser.add_argument("-o", "--output")
+
+args = parser.parse_args()
+
+if not args.url:
+    exit()
+
+if not args.output:
+    print("Er is geen output bestand naam gegeven")
+    print("Het output bestand gaat 'output.json' zijn")
+    args.output = "output"
+
 
 def is_valid_json_string(json_string) -> bool:
     """Controleer of een string geldig JSON is."""
@@ -11,36 +33,30 @@ def is_valid_json_string(json_string) -> bool:
     except ValueError:
         return False
 
-def get_valid_url() -> str:
-    """Vraag de gebruiker herhaaldelijk om een geldige URL."""
+def get_valid_url(args) -> str:
     pattern = r'^https?://\S+'
-    while True:
-        url :str = input("Typ het API endpoint URL: ").strip()
-        if re.match(pattern, url):
-            return url
-        print("Ongeldige URL. Zorg ervoor dat de URL begint met http:// of https://")
+    url :str = args.url
+    if re.match(pattern, url):
+        return url
+    print("Ongeldige URL. Zorg ervoor dat de URL begint met http:// of https://")
+    exit()
 
 def get_valid_param_file() -> dict:
-    """Vraag de gebruiker herhaaldelijk om een geldig JSON-bestand met parameters."""
-    while True:
-        param_file :str = input("Typ de bestandsnaam van de parameters (bijv. params.json): ").strip()
-        if not param_file:
-            print("Voer een bestandsnaam in.")
-            continue
-        if not os.path.isfile(param_file):
-            print(f"Bestand '{param_file}' bestaat niet. Probeer het opnieuw.")
-            continue
-        try:
-            with open(param_file, 'r') as f:
-                params :dict = json.load(f)
-            return params
-        except json.JSONDecodeError:
-            print("Het bestand bevat geen geldig JSON. Probeer een ander bestand.")
-        except Exception as e:
-            print(f"Fout bij het lezen van het bestand: {e}")
+    param_file :str = "get_config.json"
+    if not os.path.isfile(param_file):
+        print(f"Bestand '{param_file}' bestaat niet. ")
+        exit()
+    try:
+        with open(param_file, 'r') as f:
+            params :dict = json.load(f)
+        return params
+    except json.JSONDecodeError:
+        print("Het bestand bevat geen geldig JSON. Probeer een ander bestand.")
+    except Exception as e:
+        print(f"Fout bij het lezen van het bestand: {e}")
 
 if __name__ == "__main__":
-    url :str = get_valid_url()
+    url :str = get_valid_url(args)
     params :dict = get_valid_param_file()
 
     timeout = params.pop("timeout", 5.0)
@@ -79,10 +95,10 @@ if __name__ == "__main__":
             data["text"] = response.text
 
         # Alles in output.json opslaan
-        with open("output.json", "w") as f:
+        with open(f"{args.output}.json", "w") as f:
             json.dump(data, f, indent=4)
 
-        print("Data succesvol opgeslagen in output.json")
+        print(f"Data succesvol opgeslagen in '{args.output}.json'")
 
     except requests.exceptions.RequestException as e:
         print(f"Fout bij het maken van de API-aanroep: {e}")
