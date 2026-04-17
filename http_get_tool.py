@@ -3,12 +3,12 @@ import json
 import re
 import os
 import argparse
+from requests.structures import CaseInsensitiveDict
 
 parser = argparse.ArgumentParser(
                     prog='resp-analyse',
                     description='Dit programma analyseert het HTTP response van een server. Het moet eerst een custom HTTP request maken naar die server.',
                     add_help=True,
-                    suggest_on_error=True,
                     exit_on_error=False)
 
 parser.add_argument("-u", "--url")
@@ -55,6 +55,16 @@ def get_valid_param_file() -> dict:
     except Exception as e:
         print(f"Fout bij het lezen van het bestand: {e}")
 
+def convert_to_dict(obj):
+    if isinstance(obj, CaseInsensitiveDict):
+        return {k: convert_to_dict(v) for k, v in obj.items()}
+    elif isinstance(obj, dict):
+        return {k: convert_to_dict(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [convert_to_dict(item) for item in obj]
+    else:
+        return obj
+
 if __name__ == "__main__":
     url :str = get_valid_url(args)
     params :dict = get_valid_param_file()
@@ -96,7 +106,7 @@ if __name__ == "__main__":
 
         # Alles in output.json opslaan
         with open(f"{args.output}.json", "w") as f:
-            json.dump(data, f, indent=4)
+            json.dump(convert_to_dict(data), f, indent=4)
 
         print(f"Data succesvol opgeslagen in '{args.output}.json'")
 
