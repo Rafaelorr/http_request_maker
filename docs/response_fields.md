@@ -189,7 +189,8 @@ For example: `Public-Key-Pins: max-age=2592000; pin-sha256="E9CZ9INDbd+2eRQozYqq
 
 [RFC 9110, permanent] If an entity is temporarily unavailable, this instructs the client to try again later. Value could be a specified period of time (in seconds) or a HTTP-date.
 
-For example 1: `Retry-After: 120` For example 2: `Retry-After: Fri, 07 Nov 2014 23:59:59 GMT`
+For example 1: `Retry-After: 120`
+For example 2: `Retry-After: Fri, 07 Nov 2014 23:59:59 GMT`
 
 ## Server
 
@@ -247,7 +248,8 @@ For example: `Upgrade: h2c, HTTPS/1.3, IRC/6.9, RTA/x11, websocket`
 
 [RFC 9110, permanent] Tells downstream proxies how to match future request headers to decide whether the cached response can be used rather than requesting a fresh one from the origin server.
 
-For example 1: `Vary: *` For example 2: `Vary: Accept-Language`
+For example 1: `Vary: *`
+For example 2: `Vary: Accept-Language`
 
 ## Via
 
@@ -344,9 +346,10 @@ For example: `X-Powered-By: PHP/5.4.0`
 
 Specifies the component that is responsible for a particular redirect.
 
-For example: `X-Redirect-By: WordPress`
+For example: `X-Redirect-By: WordPress` <br>
 `X-Redirect-By: Polylang`
-`X-Request-ID, X-Correlation-ID`
+
+## X-Request-ID, X-Correlation-ID
 
 Correlates HTTP requests between a client and server.
 
@@ -357,13 +360,13 @@ For example: `X-Request-ID: f058ebd6-02f7-4d3f-942e-904344e8cde5`
 Recommends the preferred rendering engine (often a backward-compatibility mode) to use to display the content. Also used to activate Chrome Frame in Internet Explorer. In HTML Standard, only the IE=edge value is defined.
 
 For example:
-```
-X-UA-Compatible: IE=edge
-X-UA-Compatible: IE=EmulateIE7
-X-UA-Compatible: Chrome=1
-X-XSS-Protection
-```
 
-## Cross-site scripting (XSS) filter
+`X-UA-Compatible: IE=edge` <br>
+`X-UA-Compatible: IE=EmulateIE7` <br>
+`X-UA-Compatible: Chrome=1`
+
+## X-XSS-Protection
+
+Cross-site scripting (XSS) filter
 
 For example: `X-XSS-Protection: 1; mode=block`
