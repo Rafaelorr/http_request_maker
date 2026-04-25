@@ -53,5 +53,14 @@ def get_cookies():
 
     return jsonify({"Message":f"You're welcome {Character_Class}"})
 
+@app.route("/get/only_druids")
+def check_cookies():
+    Character_Class = request.cookies.get("Charachter_Class")
+
+    if Character_Class == "druid":
+        return jsonify({"Message": "You're invited my druidic friend."}), 200
+    else:
+        return jsonify({"Message": "Only druids are allowed here."}), 403
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
