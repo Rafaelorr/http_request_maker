@@ -47,5 +47,11 @@ def set_cookies():
 
     return resp
 
+@app.route('/get/get_cookies')
+def get_cookies():
+    Character_Class = request.cookies.get('Character_Class')
+
+    return jsonify({"Message":f"You're welcome {Character_Class}"})
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
