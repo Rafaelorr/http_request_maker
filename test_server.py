@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from flask import Flask, jsonify, request, make_response
 import json
 
@@ -60,7 +61,7 @@ def check_cookies():
     if Character_Class == "druid":
         return jsonify({"Message": "You're invited my druidic friend."}), 200
     else:
-        return jsonify({"Message": "Only druids are allowed here."}), 403
+        return jsonify({"Message": "Only druids are allowed here."})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
