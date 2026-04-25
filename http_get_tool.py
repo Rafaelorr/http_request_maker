@@ -72,12 +72,13 @@ if __name__ == "__main__":
     timeout = params.pop("timeout", 5.0)
     allow_redirects = params.pop("allow-redirects",True)
     headers = params.pop("headers",{})
+    cookies = params.pop("cookies",{})
 
 
     data :dict = {}
 
     try:
-        response = requests.get(url, timeout=timeout, allow_redirects=allow_redirects,headers=headers, params=params)
+        response = requests.get(url, timeout=timeout, allow_redirects=allow_redirects,headers=headers, params=params, cookies=cookies)
         response.raise_for_status()
 
         # Headers opslaan
@@ -87,6 +88,7 @@ if __name__ == "__main__":
             "Content-Type": response.headers.get("Content-Type"),
             "Content-Length": response.headers.get("Content-Length"),
             "Connection": response.headers.get("Connection"),
+            "Set-Cookie": response.headers.get("Set-Cookie")
         }
 
         # Response status info
@@ -96,6 +98,9 @@ if __name__ == "__main__":
             "encoding": response.encoding,
             "history": [h.headers for h in response.history]
         }
+
+        # Cookies
+        data["cookies"] = dict(response.cookies)
 
         # Probeer JSON te parseren
         try:
