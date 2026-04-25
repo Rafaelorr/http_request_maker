@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, make_response
 import json
 
 # laad server config
@@ -37,6 +37,15 @@ def get_read_request_headers():
     request_headers = dict(request.headers)
 
     return jsonify(request_headers), 200
+
+@app.route("/get/set_cookies")
+def set_cookies():
+    # Initializing response object
+
+    resp = make_response('Setting the cookie') 
+    resp.set_cookie(key = "Character_Class", value = 'druid', max_age = None, expires = None, path = '/', domain = None,  secure = None, httponly = False)
+
+    return resp
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
